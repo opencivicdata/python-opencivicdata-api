@@ -1,4 +1,5 @@
 import requests
+from .result import OCDListResult
 
 
 class Service(object):
@@ -22,11 +23,17 @@ class Service(object):
             "/".join(args)
         )
 
+    def _handle_response(self, obj):
+        if 'results' in obj:
+            return OCDListResult(obj)
+        return None
+
     def query(self, *args, **kwargs):
         params = kwargs
         kwargs['apikey'] = self.apikey
 
-        return requests.get(self.get_url(
-            self.host,
-            *args
-        ), params=params).json()
+        return self._handle_response(
+            requests.get(self.get_url(
+                    self.host,
+                    *args
+            ), params=params).json())
