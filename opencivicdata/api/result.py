@@ -21,7 +21,5 @@ class OCDDictResult(dict):
 
     def __init__(self, response):
         debug = response.pop('debug', {})
-
         self.debug = debug
-
-        super(OCDDictResult, self).__init__(results)
+        super(OCDDictResult, self).__init__(response)
