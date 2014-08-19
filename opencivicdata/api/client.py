@@ -14,7 +14,7 @@ class OCDAPI(Service):
         """
         self.setup(host=host, apikey=apikey)
 
-    def _get(self, entity_id, **kwargs):
+    def _get_object(self, entity_id, **kwargs):
         """
         Get an Object in the Open Civic Data API by it's ID, which
         is a valid API path from the root of the app. This method
@@ -27,6 +27,14 @@ class OCDAPI(Service):
             **kwargs
         )
 
+    def _get_list(self, *args, **kwargs):
+        return self._query(
+            "GET",
+            *args,
+            handler=OCDListResult,
+            **kwargs
+        )
+
     def organizations(self, **kwargs):
         """
         Get all organizations, with params **kwargs.
@@ -35,12 +43,17 @@ class OCDAPI(Service):
         of the special ``fields`` param, which will limit the
         response fields.
         """
-        return self._query(
-            "GET",
-            "organizations",
-            handler=OCDListResult,
-            **kwargs
-        )
+        return self._get_list("organizations", **kwargs)
+
+    def people(self, **kwargs):
+        """
+        Get all people, with params **kwargs.
+
+        All fields will be used to filter on, with the exception
+        of the special ``fields`` param, which will limit the
+        response fields.
+        """
+        return self._get_list("people", **kwargs)
 
     def organization(self, organization_id, *args, **kwargs):
         """
@@ -51,7 +64,7 @@ class OCDAPI(Service):
         ID is of a different type, this method will return that
         object without validating.
         """
-        return self._get(organization_id, *args, **kwargs)
+        return self._get_object(organization_id, *args, **kwargs)
 
     def person(self, person_id, *args, **kwargs):
         """
@@ -62,7 +75,7 @@ class OCDAPI(Service):
         ID is of a different type, this method will return that
         object without validating.
         """
-        return self._get(person_id, *args, **kwargs)
+        return self._get_object(person_id, *args, **kwargs)
 
     def bill(self, bill_id, *args, **kwargs):
         """
@@ -73,7 +86,7 @@ class OCDAPI(Service):
         ID is of a different type, this method will return that
         object without validating.
         """
-        return self._get(bill_id, *args, **kwargs)
+        return self._get_object(bill_id, *args, **kwargs)
 
     def vote(self, vote_id, *args, **kwargs):
         """
@@ -84,7 +97,7 @@ class OCDAPI(Service):
         ID is of a different type, this method will return that
         object without validating.
         """
-        return self._get(vote_id, *args, **kwargs)
+        return self._get_object(vote_id, *args, **kwargs)
 
     def event(self, event_id, *args, **kwargs):
         """
@@ -95,4 +108,4 @@ class OCDAPI(Service):
         ID is of a different type, this method will return that
         object without validating.
         """
-        return self._get(event_id, *args, **kwargs)
+        return self._get_object(event_id, *args, **kwargs)
