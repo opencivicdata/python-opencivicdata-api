@@ -3,8 +3,14 @@ from opencivicdata.api.result import OCDListResult, OCDDictResult
 
 
 class OCDAPI(Service):
+    """
+    Open Civic Data API wrapper.
+    """
+
     def __init__(self, host=None, apikey=None):
         """
+        Simple constructor. Invokes the setup routines. This is
+        where we can override default behavior if we need.
         """
         self.setup(host=host, apikey=apikey)
 
@@ -12,6 +18,7 @@ class OCDAPI(Service):
         """
         """
         return self._query(
+            "GET",
             entity_id,
             handler=OCDDictResult,
             **kwargs
@@ -21,6 +28,7 @@ class OCDAPI(Service):
         """
         """
         return self._query(
+            "GET",
             "organizations",
             handler=OCDListResult,
             **kwargs
