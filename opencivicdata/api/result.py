@@ -6,8 +6,41 @@ We get a small amount of meta-data back, so storing that without
 getting in the way of the response is important.
 """
 
+import functools
+import operator
 
-class OCDListResult(list):
+
+class OCDDebugMixIn(object):
+    def print_debug(self):
+        debug = self.debug
+
+        connection = debug['connection']
+        queries = connection['query']['list']
+
+        print("Made %s queries" % (connection['query']['count']))
+        print("")
+        print("Total SQL Query time:")
+
+        ql = connection['query']['list']
+        print(functools.reduce(operator.add,
+                               [float(x['time']) for x in ql]),
+              "second(s)")
+
+        print("")
+        print("Sorted by time:")
+        print("")
+        for query in sorted(queries, reverse=True, key=lambda x: float(x['time'])):
+            sql = query['sql']
+            if len(sql) >= 80:
+                sql = sql[:80] + "..."
+            print("  %s:   %s" % (query['time'], sql))
+        print("")
+        print("Prefetched Fields:")
+        for field in debug['prefetch_fields']:
+            print("  %s" % (field))
+
+
+class OCDListResult(list, OCDDebugMixIn):
     """
     This is a simple list subclass that contains two extra
     attributes -- ``debug`` and ``meta``.
@@ -31,7 +64,7 @@ class OCDListResult(list):
         super(OCDListResult, self).__init__(results)
 
 
-class OCDDictResult(dict):
+class OCDDictResult(dict, OCDDebugMixIn):
     """
     This is a simple dict subclass that contains an additional
     attribute -- ``debug``. ``debug`` allows you to access
