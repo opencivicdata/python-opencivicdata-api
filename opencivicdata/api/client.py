@@ -1,3 +1,5 @@
+import os
+
 from opencivicdata.api.service import Service
 from opencivicdata.api.result import OCDListResult, OCDDictResult
 
@@ -184,10 +186,32 @@ class OCDAPI(Service):
     def division(self, division_id, *args, **kwargs):
         """
         Get a bill ``division_id`` from the API, filtering on
-        ``**kwargs``.
+        ``**kwargs``
 
         There is no validation done on the object ID. If the object
         ID is of a different type, this method will return that
         object without validating.
         """
         return self._get_object(division_id, *args, **kwargs)
+
+    def _get_apikey(self):
+        key = super(OCDAPI, self)._get_apikey()
+        return key
+
+
+class SunlightOCDAPI(OCDAPI):
+    def __init__(self, apikey=None):
+        self.setup(
+            host="https://api.opencivicdata.org",
+            apikey=apikey
+        )
+
+    def _get_apikey(self):
+        key = super(SunlightOCDAPI, self)._get_apikey()
+        if key is None:
+            path = os.path.expanduser("~/.sunlight.key")
+            if os.path.exists(path):
+                with open(path, 'r') as fd:
+                    key = fd.read().strip()
+            key = os.environ.get("SUNLIGHT_API_KEY", key)
+        return key
