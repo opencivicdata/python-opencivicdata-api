@@ -53,15 +53,24 @@ class OCDListResult(list, OCDDebugMixIn):
     implementation detail. Please don't rely on this.
     """
 
-    def __init__(self, response):
+    def __init__(self, response, next_=None):
         results = response.pop('results')
         meta = response.pop('meta', {})
         debug = response.pop('debug', {})
 
+        self.next_ = next_
         self.meta = meta
         self.debug = debug
 
         super(OCDListResult, self).__init__(results)
+
+    def has_next(self):
+        return self.meta['max_page'] > self.meta['page']
+
+    def next(self):
+        if self.has_next() and self.next_:
+            return self.next_()
+
 
 
 class OCDDictResult(dict, OCDDebugMixIn):

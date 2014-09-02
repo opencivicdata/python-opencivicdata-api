@@ -40,18 +40,18 @@ class Service(object):
         and returned. This allows for things like ``OCDListResult``
         or ``OCDDictResult`` to take control of the response.
         """
-
         params = kwargs
         kwargs['apikey'] = self.apikey
 
-        return handler(
-            requests.request(
-                method,
-                self.get_url(
-                    self.host,
-                    *args
-            ), params=params).json()
-        )
+        response = requests.request(
+            method,
+            self.get_url(
+                self.host,
+                *args
+        ), params=params)
+        if response.ok:
+            return handler(response.json())
+        raise ValueError(response.json())
 
     def _get_apikey(self):
         """

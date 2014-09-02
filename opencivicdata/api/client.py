@@ -36,10 +36,15 @@ class OCDAPI(Service):
         API rest path. This method is the means through with all
         other list endpoints hit the API.
         """
+        page = kwargs.get("page", 1)
+        nkwargs = kwargs.copy()
+        nkwargs['page'] = (page + 1)
+        next_ = lambda: self._get_list(*args, **nkwargs)
+
         return self._query(
             "GET",
             *args,
-            handler=OCDListResult,
+            handler=lambda obj: OCDListResult(obj, next_=next_),
             **kwargs
         )
 
