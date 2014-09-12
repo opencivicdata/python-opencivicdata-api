@@ -43,6 +43,9 @@ class Service(object):
         params = kwargs
         kwargs['apikey'] = self.apikey
 
+        if 'fields' in kwargs:
+            kwargs['fields'] = ",".join(kwargs.pop('fields'))
+
         response = requests.request(
             method,
             self.get_url(
