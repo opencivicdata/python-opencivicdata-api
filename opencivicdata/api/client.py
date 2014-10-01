@@ -229,3 +229,8 @@ class SunlightOCDAPI(OCDAPI):
                     key = fd.read().strip()
             key = os.environ.get("SUNLIGHT_API_KEY", key)
         return key
+
+
+class VagrantOCDAPI(OCDAPI):
+    def __init__(self, apikey=None):
+        self.setup(host="http://10.42.2.102", apikey=apikey)
