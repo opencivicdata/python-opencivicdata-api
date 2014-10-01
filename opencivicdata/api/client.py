@@ -70,6 +70,15 @@ class OCDAPI(Service):
         """
         return self._get_list("people", **kwargs)
 
+    def people_by_lat_lon(self, lat, lon):
+        """
+        Get all people who fill a role for a particular point.
+
+        Some examples are legislators, governors, or school board
+        members.
+        """
+        return self._get_list("people", lat=lat, lon=lon)
+
     def votes(self, **kwargs):
         """
         Get all votes, with params **kwargs.
