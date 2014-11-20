@@ -6,6 +6,22 @@ to work with the
 [Open Civic Data](http://opencivicdata.org/)
 [API](http://docs.opencivicdata.org/en/latest/api/index.html).
 
+Quickstart
+==========
+
+Most users will want to use the pre-configured Sunlight OCD API client, which
+reads your Sunlight API key from the same location as
+[python-sunlight](https://github.com/sunlightlabs/python-sunlight) does.
+
+Just set either the `SUNLIGHT_API_KEY` envvar,  or write out your key to
+`~/.sunlight.key`.
+
+```python
+from opencivicdata.api import SunlightOCDAPI
+api = SunlightOCDAPI()
+for person in api.people_by_lat_lon(42.35, -71.06):
+    print(person)
+```
 
 Available Clients
 =================
