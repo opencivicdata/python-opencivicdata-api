@@ -1,5 +1,4 @@
-# from opencivicdata.api import OCDAPI
-from opencivicdata.api.client import VagrantOCDAPI
+from opencivicdata.api.client import SunlightOCDAPI
 api = VagrantOCDAPI()
 people = api.people()
 while people.has_next():
